@@ -42,6 +42,14 @@ async function run() {
             res.json(product);
         });
 
+        app.get('/bookings', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = bookingCollection.find(query);
+            const bookings = await cursor.toArray();
+            res.json(bookings);
+        });
+
         //POST
         app.post('/users', async (req, res) => {
             const user = req.body;
