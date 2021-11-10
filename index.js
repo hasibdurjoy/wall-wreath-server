@@ -23,6 +23,9 @@ async function run() {
         await client.connect();
         const database = client.db('wall-wreath');
         const productCollection = database.collection('products');
+        const usersCollection = database.collection('users');
+
+        //get
 
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({});
@@ -36,6 +39,23 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const product = await productCollection.findOne(query);
             res.json(product);
+        });
+
+        //POST
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.json(result)
+        });
+
+        //PUT
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
         });
     }
     finally {
