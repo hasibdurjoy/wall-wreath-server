@@ -80,6 +80,14 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         });
+
+        //DELETE
+        app.delete('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookingCollection.deleteOne(query);
+            res.json(result);
+        });
     }
     finally {
         // await client.close();
