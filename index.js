@@ -23,6 +23,7 @@ async function run() {
         await client.connect();
         const database = client.db('wall-wreath');
         const productCollection = database.collection('products');
+        const bookingCollection = database.collection('bookings');
         const usersCollection = database.collection('users');
 
         //get
@@ -45,6 +46,13 @@ async function run() {
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
+            res.json(result)
+        });
+
+        app.post('/bookings', async (req, res) => {
+            console.log(req.body);
+            const user = req.body;
+            const result = await bookingCollection.insertOne(user);
             res.json(result)
         });
 
