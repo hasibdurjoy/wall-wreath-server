@@ -41,6 +41,13 @@ async function run() {
             res.json(product);
         });
 
+        app.get('/manageProducts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const product = await productCollection.findOne(query);
+            res.json(product);
+        });
+
         app.get('/bookings', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
@@ -85,6 +92,13 @@ async function run() {
         })
 
         //POST
+        app.post('/products', async (req, res) => {
+            console.log('called');
+            const product = req.body;
+            const result = await productCollection.insertOne(product);
+            res.json(result)
+        });
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
@@ -92,7 +106,6 @@ async function run() {
         });
 
         app.post('/bookings', async (req, res) => {
-            console.log(req.body);
             const booking = req.body;
             const result = await bookingCollection.insertOne(booking);
             res.json(result)
@@ -133,11 +146,28 @@ async function run() {
 
         })
 
+        app.put('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const updateDoc = {
+                $set: { status: "approved" }
+            };
+            const result = await bookingCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        })
+
         //DELETE
         app.delete('/bookings/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await bookingCollection.deleteOne(query);
+            res.json(result);
+        });
+
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productCollection.deleteOne(query);
             res.json(result);
         });
     }
