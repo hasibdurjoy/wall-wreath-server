@@ -156,6 +156,19 @@ async function run() {
             res.json(result);
         })
 
+        app.put('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const product = req.body;
+            const filter = { _id: ObjectId(id) }
+            const updateDoc = {
+                $set: { ...product }
+            };
+            const result = await productCollection.updateOne(filter, updateDoc);
+            res.json(result);
+            console.log(updateDoc);
+            console.log(id);
+        })
+
         //DELETE
         app.delete('/bookings/:id', async (req, res) => {
             const id = req.params.id;
