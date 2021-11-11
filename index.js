@@ -28,7 +28,6 @@ async function run() {
         const usersCollection = database.collection('users');
 
         //get
-
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({});
             const products = await cursor.toArray();
@@ -36,7 +35,6 @@ async function run() {
         });
 
         app.get('/products/:id', async (req, res) => {
-            console.log(req.params.id);
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const product = await productCollection.findOne(query);
@@ -114,6 +112,7 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         });
+
 
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
