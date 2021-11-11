@@ -42,18 +42,19 @@ async function run() {
         });
 
         app.get('/bookings', async (req, res) => {
-            const cursor = bookingCollection.find({});
-            const bookings = await cursor.toArray();
-            res.json(bookings);
-        });
-
-        app.get('/bookings', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
             const cursor = bookingCollection.find(query);
             const bookings = await cursor.toArray();
             res.json(bookings);
         });
+
+        app.get('/allBookings', async (req, res) => {
+            const cursor = bookingCollection.find({});
+            const bookings = await cursor.toArray();
+            res.json(bookings);
+        });
+
 
         app.get('/reviews', async (req, res) => {
             const cursor = reviewCollection.find({});
