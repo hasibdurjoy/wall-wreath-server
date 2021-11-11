@@ -15,7 +15,7 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yohkm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
-
+console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 async function run() {
@@ -44,6 +44,12 @@ async function run() {
         });
 
         app.get('/bookings', async (req, res) => {
+            const cursor = bookingCollection.find({});
+            const bookings = await cursor.toArray();
+            res.json(bookings);
+        });
+
+        app.get('/bookings', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
             const cursor = bookingCollection.find(query);
@@ -66,6 +72,18 @@ async function run() {
             const users = await cursor.toArray();
             res.json(users);
         });
+
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            console.log(user?.role);
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
 
         //POST
         app.post('/users', async (req, res) => {
