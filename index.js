@@ -57,6 +57,16 @@ async function run() {
             res.json(reviews);
         });
 
+        app.get('/users', async (req, res) => {
+            const role = req.query.role;
+
+            const query = { role: role }
+
+            const cursor = usersCollection.find(query);
+            const users = await cursor.toArray();
+            res.json(users);
+        });
+
         //POST
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -86,6 +96,24 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         });
+
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            // const requester = req.decodedEmail;
+            // if (requester) {
+            //     const requesterAccount = await usersCollection.findOne({ email: requester });
+            //     if (requesterAccount.role === 'admin') {
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+            // }
+            // }
+            // else {
+            //     res.status(403).json({ message: 'you do not have access to make admin' })
+            // }
+
+        })
 
         //DELETE
         app.delete('/bookings/:id', async (req, res) => {
