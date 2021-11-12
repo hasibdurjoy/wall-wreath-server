@@ -28,12 +28,15 @@ async function run() {
         const usersCollection = database.collection('users');
 
         //get
+
+        //GET ALL PRODUCTS
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({});
             const products = await cursor.toArray();
             res.json(products);
         });
 
+        //GET  PRODUCTS BY ID
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
@@ -41,6 +44,7 @@ async function run() {
             res.json(product);
         });
 
+        //GET  PRODUCTS BY ID
         app.get('/manageProducts/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
@@ -48,6 +52,7 @@ async function run() {
             res.json(product);
         });
 
+        //GET  BOOKINGS BY QUERY
         app.get('/bookings', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
@@ -56,19 +61,21 @@ async function run() {
             res.json(bookings);
         });
 
+        //GET  ALL BOOKINGS
         app.get('/allBookings', async (req, res) => {
             const cursor = bookingCollection.find({});
             const bookings = await cursor.toArray();
             res.json(bookings);
         });
 
-
+        //GET  ALL REVIEWS
         app.get('/reviews', async (req, res) => {
             const cursor = reviewCollection.find({});
             const reviews = await cursor.toArray();
             res.json(reviews);
         });
 
+        //GET  USERS WHO ARE ADMIN
         app.get('/users', async (req, res) => {
             const role = req.query.role;
 
@@ -79,6 +86,7 @@ async function run() {
             res.json(users);
         });
 
+        //GET  USERS BY IS
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -92,25 +100,29 @@ async function run() {
         })
 
         //POST
+
+        //ADD NEW PRODUCT
         app.post('/products', async (req, res) => {
-            console.log('called');
             const product = req.body;
             const result = await productCollection.insertOne(product);
             res.json(result)
         });
 
+        //ADD NEW USER
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.json(result)
         });
 
+        //ADD NEW BOOKING
         app.post('/bookings', async (req, res) => {
             const booking = req.body;
             const result = await bookingCollection.insertOne(booking);
             res.json(result)
         });
 
+        //ADD NEW REVIEW
         app.post('/reviews', async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
@@ -118,6 +130,8 @@ async function run() {
         });
 
         //PUT
+
+        //ADD NEW USER IF NOT HAVE
         app.put('/users', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
@@ -127,25 +141,16 @@ async function run() {
             res.json(result);
         });
 
-
+        //MAKE ADMIN
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
-            // const requester = req.decodedEmail;
-            // if (requester) {
-            //     const requesterAccount = await usersCollection.findOne({ email: requester });
-            //     if (requesterAccount.role === 'admin') {
             const filter = { email: user.email };
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
-            // }
-            // }
-            // else {
-            //     res.status(403).json({ message: 'you do not have access to make admin' })
-            // }
-
         })
 
+        //UPDATE BOOKING
         app.put('/bookings/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) }
@@ -156,6 +161,7 @@ async function run() {
             res.json(result);
         })
 
+        //UPDATE PRODUCT
         app.put('/products/:id', async (req, res) => {
             const id = req.params.id;
             const product = req.body;
@@ -168,6 +174,8 @@ async function run() {
         })
 
         //DELETE
+
+        //DELETE BOOKING
         app.delete('/bookings/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -175,6 +183,7 @@ async function run() {
             res.json(result);
         });
 
+        //DELETE PRODUCT
         app.delete('/products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
