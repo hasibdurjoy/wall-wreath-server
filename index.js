@@ -165,8 +165,6 @@ async function run() {
             };
             const result = await productCollection.updateOne(filter, updateDoc);
             res.json(result);
-            console.log(updateDoc);
-            console.log(id);
         })
 
         //DELETE
